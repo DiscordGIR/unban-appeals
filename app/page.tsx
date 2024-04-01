@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { Input, TextArea } from "@/components/ui/input";
+import SubmitButton from "@/components/ui/submit-button";
+import { addUserToGuild, sendAppealToWehook } from "@/lib/utils";
 import { auth } from "auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth();
@@ -8,8 +10,32 @@ export default async function Page() {
   async function submitAppeal(formData: FormData) {
     "use server";
 
-    console.log(formData)
-  };
+    if (!session || !session.user) {
+      return;
+    }
+
+    // send data to Discord webhook
+    const sendWehookResponse = await sendAppealToWehook(session, formData);
+
+    if (sendWehookResponse.status !== 204) {
+      redirect("/error?message=Failed to submit appeal, please try again or contact..");
+    }
+
+    // @ts-ignore
+    const addUserResponse = await addUserToGuild(
+      session.user.id!,
+      // @ts-ignore
+      session.sessionToken,
+    );
+
+    if (addUserResponse.status !== 201) {
+      redirect(
+        "/error?message=Failed to add user to guild, please try again or contact..",
+      );
+    }
+
+    redirect("/success");
+  }
 
   return (
     <div className="space-y-2">
@@ -32,7 +58,10 @@ export default async function Page() {
         </p>
       ) : (
         <div className="pt-4">
-          <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground" action={submitAppeal}>
+          <form
+            className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
+            action={submitAppeal}
+          >
             <label className="font-medium text-sm" htmlFor="username">
               Username
             </label>
@@ -62,11 +91,15 @@ export default async function Page() {
               Why were you banned?
             </label>
             <TextArea name="whyBanned" rows={4} />
+            <label className="font-medium text-sm" htmlFor="banJustified">
+              Do you think the ban was justified? Explain your answer.
+            </label>
+            <TextArea name="banJustified" rows={4} />
             <label className="font-medium text-sm" htmlFor="whyUnban">
               Why do you think you should be unbanned?
             </label>
             <TextArea name="whyUnban" rows={4} />
-            <Button type="submit">Submit</Button>
+            <SubmitButton />
           </form>
         </div>
       )}

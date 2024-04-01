@@ -5,7 +5,7 @@ import type { NextAuthConfig } from "next-auth";
 
 export const config = {
   theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+    logo: "https://media.discordapp.net/attachments/457981600941080596/1224432807888031774/normal2.png?ex=661d78ea&is=660b03ea&hm=b9949852ad704b340179bbbc319896ed1f390a2c1e5fae5ed2886d260316face&=&format=webp&quality=lossless&width=629&height=629",
   },
   providers: [
     Discord({
@@ -33,6 +33,7 @@ export const config = {
       if (token) {
         if (token?.picture?.includes("discord")) {
           session.user.id = token.id as string;
+          session.sessionToken = token.accessToken as string;
         }
       }
       return session;
