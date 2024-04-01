@@ -24,46 +24,50 @@ export const addUserToGuild = async (userId: string, sessionToken: string) => {
   return await fetch(url.href, body);
 };
 
-export const sendAppealToWehook = async (session: Session, formData: FormData) => {
-    const webhook = new URL(process.env.DISCORD_WEBHOOK!);
+export const sendAppealToWehook = async (
+  session: Session,
+  formData: FormData,
+) => {
+  const webhook = new URL(process.env.DISCORD_WEBHOOK!);
 
-    return await fetch(webhook.href, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        embeds: [
-          {
-            title: "Ban Appeal",
-            fields: [
-              {
-                name: "Username",
-                value: session?.user?.name,
-              },
-              {
-                name: "ID",
-                value: session?.user?.id,
-              },
-              {
-                name: "When were you banned?",
-                value: formData.get("whenBanned"),
-              },
-              {
-                name: "Why were you banned?",
-                value: formData.get("whyBanned"),
-              },
-              {
-                name: "Do you think the ban was justified? Explain your answer.",
-                value: formData.get("banJustified"),
-              },
-              {
-                name: "Why should you be unbanned?",
-                value: formData.get("whyUnban"),
-              },
-            ],
-          },
-        ],
-      }),
-    });
-}
+  return await fetch(webhook.href, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      embeds: [
+        {
+          title: "New Unban Appeal",
+          color: 0x377ef7,
+          fields: [
+            {
+              name: "Username",
+              value: session?.user?.name,
+            },
+            {
+              name: "ID",
+              value: session?.user?.id,
+            },
+            {
+              name: "When were you banned?",
+              value: formData.get("whenBanned"),
+            },
+            {
+              name: "Why were you banned?",
+              value: formData.get("whyBanned"),
+            },
+            {
+              name: "Do you think the ban was justified? Explain your answer.",
+              value: formData.get("banJustified"),
+            },
+            {
+              name: "Why should you be unbanned?",
+              value: formData.get("whyUnban"),
+            },
+          ],
+        },
+      ],
+    }),
+  });
+};
