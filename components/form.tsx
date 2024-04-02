@@ -4,10 +4,25 @@ import { submitAppeal } from "@/actions/submit-action";
 import { Input, TextArea } from "@/components/ui/input";
 import SubmitButton from "@/components/ui/submit-button";
 import { useSession } from "next-auth/react";
-import React from "react";
+import React  from "react";
+import { useToast } from "./ui/use-toast";
 
 const Form = () => {
   const { data: session } = useSession();
+  const { toast } = useToast();
+
+  async function handleSubmitAppeal(formData: FormData) {
+    const result = await submitAppeal(formData)
+
+    if (result?.error) {
+      return toast({
+        title: 'An unexpected error occured',
+        description: result.error,
+        variant: 'destructive'
+      })
+    }
+  }
+
   if (!session?.user) {
     return (
       <p>
@@ -19,7 +34,7 @@ const Form = () => {
   return (
     <form
       className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-      action={submitAppeal}
+      action={handleSubmitAppeal}
     >
       <label className="font-medium text-sm" htmlFor="username">
         Username
