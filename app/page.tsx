@@ -1,41 +1,10 @@
 import { Input, TextArea } from "@/components/ui/input";
 import SubmitButton from "@/components/ui/submit-button";
-import { addUserToGuild, sendAppealToWehook } from "@/lib/utils";
 import { auth } from "auth";
-import { redirect } from "next/navigation";
+import { submitAppeal } from "./actions/submit-action";
 
 export default async function Page() {
   const session = await auth();
-
-  async function submitAppeal(formData: FormData) {
-    "use server";
-
-    if (!session || !session.user) {
-      return;
-    }
-
-    // send data to Discord webhook
-    const sendWehookResponse = await sendAppealToWehook(session, formData);
-
-    if (sendWehookResponse.status !== 204) {
-      redirect("/error?message=Failed to submit appeal, please try again or contact..");
-    }
-
-    // @ts-ignore
-    const addUserResponse = await addUserToGuild(
-      session.user.id!,
-      // @ts-ignore
-      session.sessionToken,
-    );
-
-    if (addUserResponse.status !== 201) {
-      redirect(
-        "/error?message=Failed to add user to guild, please try again or contact..",
-      );
-    }
-
-    redirect("/success");
-  }
 
   return (
     <div className="space-y-2">
@@ -52,7 +21,7 @@ export default async function Page() {
         Discord username and ID. You will also automatically join our appeal
         server where you will await your decision.
       </p>
-      {!session?.user ? (
+      {!session || !session.user ? (
         <p>
           To continue, please <em>Sign In</em> with Discord first.
         </p>
