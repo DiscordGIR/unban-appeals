@@ -1,6 +1,28 @@
 import { auth } from "auth";
 import Form from "@/components/form";
 import { SessionProvider } from "next-auth/react";
+import { isUserBanned, userHasActiveAppeal } from "@/lib/utils";
+import { Suspense } from "react";
+import Alert from "@/components/ui/alert";
+
+async function FormContent({ userId }: { userId: string }) {
+  const isBanned = await isUserBanned(userId);
+  const hasExistingAppeal = await userHasActiveAppeal(userId);
+
+  if (!isBanned) {
+    return (
+      <Alert message="You are not banned from the r/Jailbreak Discord server. You cannot appeal if you are not banned." />
+    );
+  }
+
+  if (hasExistingAppeal) {
+    return (
+      <Alert message="You already have an active appeal. Please wait for a decision." />
+    );
+  }
+
+  return <Form />;
+}
 
 export default async function Page() {
   const session = await auth();
@@ -35,9 +57,11 @@ export default async function Page() {
             To continue, please <em>Sign In</em> with Discord first.
           </p>
         ) : (
-          <div className="pt-4">
-            <Form />
-          </div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <div className="pt-4">
+              <FormContent userId={session.user.id!} />
+            </div>
+          </Suspense>
         )}
       </div>
     </SessionProvider>

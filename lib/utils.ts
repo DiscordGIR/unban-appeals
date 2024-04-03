@@ -24,6 +24,48 @@ export const addUserToGuild = async (userId: string, sessionToken: string) => {
   return await fetch(url.href, body);
 };
 
+export const isUserBanned = async (userId: string) => {
+  const url = new URL(
+    `https://discord.com/api/guilds/${process.env.MAIN_GUILD_ID}/bans/${userId}`,
+  );
+  const body = {
+    method: "GET",
+    headers: {
+      Authorization: `Bot ${process.env.BOT_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const response = await fetch(url.href, body);
+  
+  // discord's API will return a 404 status if the user is not banned (i.e ban not found)
+  const isBanned = response.status !== 404;
+  return isBanned;
+};
+
+
+export const userHasActiveAppeal = async (userId: string) => {
+  const url = new URL(
+    `https://discord.com/api/guilds/${process.env.APPEAL_GUILD_ID}/threads/active`,
+  );
+  const body = {
+    method: "GET",
+    headers: {
+      Authorization: `Bot ${process.env.BOT_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const response = await fetch(url.href, body);
+
+  const data = await response.json()
+  const threads = data["threads"]
+
+  const userHasThread = threads.find((thread: any) => thread["name"].includes(userId))
+  return userHasThread;
+};
+
+
 export const sendAppealToWehook = async (
   session: Session,
   formData: FormData,
