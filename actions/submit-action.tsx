@@ -16,7 +16,7 @@ async function submitAppeal(formData: FormData) {
   if (sendWehookResponse.status !== 204) {
     console.error(sendWehookResponse.status, sendWehookResponse.statusText);
     return {
-      error: "Failed to submit appeal, please try again or contact..",
+      error: "Failed to submit appeal, please try again or contact @aaron on Discord",
     };
   }
 
@@ -30,11 +30,9 @@ async function submitAppeal(formData: FormData) {
     console.error(addUserResponse.status, addUserResponse.statusText);
     return {
       error:
-        "/error?message=Failed to add user to guild, please try again or contact..",
+        "Failed to add user to guild, please try again or contact @aaron on Discord",
     };
   }
-
-  redirect('/success')
 }
 
 export { submitAppeal };

@@ -11,13 +11,18 @@ async function FormContent({ userId }: { userId: string }) {
 
   if (!isBanned) {
     return (
-      <Alert message="You are not banned from the r/Jailbreak Discord server. You cannot appeal if you are not banned." />
+      <Alert variant="error">
+        You are not banned from the r/Jailbreak Discord server. You cannot
+        appeal if you are not banned.
+      </Alert>
     );
   }
 
   if (hasExistingAppeal) {
     return (
-      <Alert message="You already have an active appeal. Please wait for a decision." />
+      <Alert variant="error">
+        You already have an active appeal. Please wait for a decision.
+      </Alert>
     );
   }
 

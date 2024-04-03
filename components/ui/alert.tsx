@@ -1,13 +1,23 @@
-import React from "react";
+"use client";
+
+import { cn } from "@/lib/utils";
+
+import React, { ReactNode } from "react";
 
 type Props = {
-  message: string;
+  children: ReactNode;
+  variant: "error" | "success";
 };
 
-const Alert = ({ message }: Props) => {
+const Alert = ({ children, variant }: Props) => {
   return (
-    <div className="bg-red-500 p-4 rounded-sm text-white">
-      <p>{message}</p>
+    <div
+      className={cn("p-4 rounded-sm text-white", {
+        ["bg-red-500"]: variant === "error",
+        ["bg-green-500"]: variant === "success",
+      })}
+    >
+      <p>{children}</p>
     </div>
   );
 };

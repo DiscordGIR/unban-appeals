@@ -4,23 +4,27 @@ import { submitAppeal } from "@/actions/submit-action";
 import { Input, TextArea } from "@/components/ui/input";
 import SubmitButton from "@/components/ui/submit-button";
 import { useSession } from "next-auth/react";
-import React  from "react";
+import React, { useState } from "react";
 import { useToast } from "./ui/use-toast";
+import Alert from "./ui/alert";
 
 const Form = () => {
   const { data: session } = useSession();
   const { toast } = useToast();
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmitAppeal(formData: FormData) {
-    const result = await submitAppeal(formData)
+    const result = await submitAppeal(formData);
 
     if (result?.error) {
       return toast({
-        title: 'An unexpected error occured',
+        title: "An unexpected error occured",
         description: result.error,
-        variant: 'destructive'
-      })
+        variant: "destructive",
+      });
     }
+
+    setSubmitted(true);
   }
 
   if (!session?.user) {
@@ -28,6 +32,16 @@ const Form = () => {
       <p>
         To continue, please <em>Sign In</em> with Discord first.
       </p>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <Alert variant="success">
+        Your appeal has been submitted! You have now been put in our appeals
+        server. A moderator or administrator will contact you when your case has
+        been voted on.
+      </Alert>
     );
   }
 
