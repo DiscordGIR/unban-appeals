@@ -1,7 +1,7 @@
 import { auth } from "auth";
 import Form from "@/components/form";
 import { SessionProvider } from "next-auth/react";
-import { isUserBanned, userHasActiveAppeal } from "@/lib/utils";
+import { isUserBanned, userHasActiveAppeal } from "@/actions/util-actions";
 import { Suspense } from "react";
 import Alert from "@/components/ui/alert";
 

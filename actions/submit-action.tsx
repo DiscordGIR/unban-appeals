@@ -1,8 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { addUserToGuild, sendAppealToWehook } from "@/lib/utils";
-import { redirect } from "next/navigation";
+import { addUserToGuild, sendAppealToWehook } from "./util-actions";
 
 async function submitAppeal(formData: FormData) {
   const session = await auth();
