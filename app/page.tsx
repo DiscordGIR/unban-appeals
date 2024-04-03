@@ -14,6 +14,10 @@ async function FormContent({ userId }: { userId: string }) {
       <Alert variant="error">
         You are not banned from the r/Jailbreak Discord server. You cannot
         appeal if you are not banned.
+        <br />
+        <strong>
+          Make sure you are signed in as the account that is banned.
+        </strong>
       </Alert>
     );
   }
@@ -47,7 +51,7 @@ export default async function Page() {
         <h1 className="text-3xl font-bold">r/Jailbreak Unban Appeals Form</h1>
         <p>
           This form is to be filled out if you were banned from the r/Jailbreak
-          discord server and you are looking to get unbanned. It is not
+          Discord server and you are looking to get unbanned. It is not
           recommended to appeal within 3 months of your ban. Also, you cannot
           fill this out on behalf of someone else.
         </p>
