@@ -19,7 +19,7 @@ async function submitAppeal(formData: FormData) {
     console.error(addUserResponse.status, addUserResponse.statusText);
     return {
       error:
-        "Failed to add you to the appeals Discord server, please try again or contact @aaron on Discord",
+        "Failed to add you to the appeals Discord server. Make sure you haven't reached the limit of servers you can join. If not, please try again later.",
     };
   }
 
