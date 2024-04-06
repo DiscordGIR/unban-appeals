@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { isUserBanned, userHasActiveAppeal } from "@/actions/util-actions";
 import { Suspense } from "react";
 import Alert from "@/components/ui/alert";
+import ListItem from "@/components/ui/list-item";
 
 async function FormContent({ userId }: { userId: string }) {
   const isBanned = await isUserBanned(userId);
@@ -12,11 +13,10 @@ async function FormContent({ userId }: { userId: string }) {
   if (!isBanned) {
     return (
       <Alert variant="error">
-        You are not banned from the r/Jailbreak Discord server. You cannot
-        appeal if you are not banned.
+        You are not banned from the r/Jailbreak Discord server.
         <br />
         <strong>
-          Make sure you are signed in as the account that is banned.
+          Make sure you are signing in with the account that was banned.
         </strong>
       </Alert>
     );
@@ -51,11 +51,20 @@ export default async function Page() {
         <h1 className="text-3xl font-bold">r/Jailbreak Unban Appeals Form</h1>
         <p>
           This form is to be filled out if you were banned from the r/Jailbreak
-          Discord server and you are looking to get unbanned. It is not
-          recommended to appeal within 3 months of your ban. Also, you cannot
-          fill this out on behalf of someone else.
+          Discord server and are looking to be unbanned.
         </p>
-
+        <ul className="ml-2">
+          <ListItem>
+            It is not recommended to appeal within 3 months of your ban.
+          </ListItem>
+          <ListItem>
+            You cannot fill this out on behalf of someone else.
+          </ListItem>
+          <ListItem>
+            After 3 failed attempts, you will no longer be able to appeal your
+            ban.
+          </ListItem>
+        </ul>
         <p>
           By signing in, you give us access to basic information such as your
           Discord username and ID. You will also automatically join our appeal
@@ -63,7 +72,8 @@ export default async function Page() {
         </p>
         {!session || !session.user ? (
           <p>
-            To continue, please <em>Sign In</em> with Discord first.
+            To continue, please Sign In with Discord by clicking the "sign in"
+            button above.
           </p>
         ) : (
           <Suspense fallback={<div>Loading...</div>}>
