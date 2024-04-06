@@ -8,6 +8,20 @@ async function submitAppeal(formData: FormData) {
   if (!session || !session.user) {
     return;
   }
+  
+  const addUserResponse = await addUserToGuild(
+    session.user.id!,
+    // @ts-ignore
+    session.sessionToken,
+  );
+
+  if (addUserResponse.status !== 201 && addUserResponse.status !== 204) {
+    console.error(addUserResponse.status, addUserResponse.statusText);
+    return {
+      error:
+        "Failed to add you to the appeals Discord server, please try again or contact @aaron on Discord",
+    };
+  }
 
   // send data to Discord webhook
   const sendWehookResponse = await sendAppealToWehook(session, formData);
@@ -19,19 +33,6 @@ async function submitAppeal(formData: FormData) {
     };
   }
 
-  const addUserResponse = await addUserToGuild(
-    session.user.id!,
-    // @ts-ignore
-    session.sessionToken,
-  );
-
-  if (addUserResponse.status !== 201 && addUserResponse.status !== 204) {
-    console.error(addUserResponse.status, addUserResponse.statusText);
-    return {
-      error:
-        "Failed to add user to guild, please try again or contact @aaron on Discord",
-    };
-  }
 }
 
 export { submitAppeal };
