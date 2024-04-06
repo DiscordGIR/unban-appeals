@@ -1,4 +1,5 @@
 "server-only";
+import { Session } from "next-auth";
 
 export const addUserToGuild = async (userId: string, sessionToken: string) => {
   const url = new URL(
