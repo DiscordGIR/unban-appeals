@@ -32,12 +32,11 @@ export const isUserBanned = async (userId: string) => {
   };
 
   const response = await fetch(url.href, body);
-  
+
   // discord's API will return a 404 status if the user is not banned (i.e ban not found)
   const isBanned = response.status !== 404;
   return isBanned;
 };
-
 
 export const userHasActiveAppeal = async (userId: string) => {
   const url = new URL(
@@ -53,13 +52,14 @@ export const userHasActiveAppeal = async (userId: string) => {
 
   const response = await fetch(url.href, body);
 
-  const data = await response.json()
-  const threads = data["threads"]
+  const data = await response.json();
+  const threads = data["threads"];
 
-  const userHasThread = threads.find((thread: any) => thread["name"].includes(userId))
+  const userHasThread = threads.find((thread: any) =>
+    thread["name"].includes(userId),
+  );
   return userHasThread;
 };
-
 
 export const sendAppealToWehook = async (
   session: Session,
@@ -80,27 +80,27 @@ export const sendAppealToWehook = async (
           fields: [
             {
               name: "Username",
-              value: session?.user?.name,
+              value: session?.user?.name ?? "unknown username",
             },
             {
               name: "ID",
-              value: session?.user?.id,
+              value: session?.user?.id ?? "unknown id",
             },
             {
               name: "When were you banned?",
-              value: formData.get("whenBanned"),
+              value: formData.get("whenBanned") ?? "empty",
             },
             {
               name: "Why were you banned?",
-              value: formData.get("whyBanned"),
+              value: formData.get("whyBanned") ?? "empty",
             },
             {
               name: "Do you think the ban was justified? Explain your answer.",
-              value: formData.get("banJustified"),
+              value: formData.get("banJustified") ?? "empty",
             },
             {
               name: "Why should you be unbanned?",
-              value: formData.get("whyUnban"),
+              value: formData.get("whyUnban") ?? "empty",
             },
           ],
         },
